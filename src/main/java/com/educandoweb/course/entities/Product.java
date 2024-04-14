@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "tb_product")
@@ -29,11 +31,10 @@ public class Product implements Serializable{
 	private String imgUrl;
 	
 	//Set é um conjunto e garante que eu não tenha um produto com mais de uma ocorrência da mesma categoria
-	//O mesmo produto não pode ter a mesma categoria mais de uma vez
+	//O mesmo produto não pode ter a mesma categoria mais de uma vez   (fetch = FetchType.EAGER)
 	//QUANDO EU COLOCO @Transient, o spring imped que o JPA interprete a linha abaixo. Tem que fazer nos dois lados do relacionamento
-	//@ManyToMany
-	//@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-	@Transient
+	@ManyToMany @Fetch(FetchMode.JOIN)
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
 	public Product() {
