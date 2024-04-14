@@ -8,6 +8,8 @@ import java.util.Set;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,6 +39,9 @@ public class Product implements Serializable{
 	@ManyToMany @Fetch(FetchMode.JOIN)
 	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.product")  @Fetch(FetchMode.JOIN)
+	private Set<OrderItem> items = new HashSet<>();
 	
 	public Product() {
 	}
@@ -94,6 +100,15 @@ public class Product implements Serializable{
 	public Set<Category> getCategories() {
 		return categories;
 	}
+	
+	@JsonIgnore
+	public Set<Order> getOrders() {
+		Set<Order> set = new HashSet<>();
+		for (OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
+	}	
 
 	@Override
 	public int hashCode() {
