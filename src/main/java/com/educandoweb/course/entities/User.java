@@ -30,7 +30,7 @@ public class User implements Serializable{
 	
 	// @JsonIgnore - Colocando para evitar chamada ciclica
 	@JsonIgnore
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client") 
 	private List<Order> orders = new ArrayList<>();
 	
 	//Como estamos usando o framework é obrigado a colocar um construtor vazio
