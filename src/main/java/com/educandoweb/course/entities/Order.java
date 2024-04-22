@@ -12,6 +12,7 @@ import org.hibernate.annotations.FetchMode;
 import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -41,6 +43,10 @@ public class Order implements Serializable {
 
 	@OneToMany(mappedBy = "id.order") @Fetch(FetchMode.JOIN)
 	private Set<OrderItem> items = new HashSet<>();	
+	
+	//Estamos mapeando o pedido e o pagamento com o mesmo ID, por isso o cascade
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
 	
 	public Order() {
 	}
@@ -89,6 +95,14 @@ public class Order implements Serializable {
 	public Set<OrderItem> getItems() {
 		return items;
 	}	
+	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
 	@Override
 	public int hashCode() {
