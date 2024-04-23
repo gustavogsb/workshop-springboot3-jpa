@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -38,7 +41,7 @@ public class Order implements Serializable {
 	@JoinColumn(name = "client_id")
 	private User client;	
 
-	@OneToMany(mappedBy = "id.order")
+	@OneToMany(mappedBy = "id.order")  @Fetch(FetchMode.JOIN)
 	private Set<OrderItem> items = new HashSet<>();	
 	
 	//Estamos mapeando o pedido e o pagamento com o mesmo ID, por isso o cascade
